@@ -1,23 +1,34 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <div class="icon" @click="change"></div>
+    <p>Welcome: {{ getWelcome }}</p>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  name: 'app'
+  name: 'app',
+  methods: {
+    change () {
+      this.$store.dispatch('changeWelcome', { 'welcome': !this.getWelcome })
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'getWelcome'
+    ])
+  }
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.icon {
+  background-image: url('~@/assets/logo.png');
+  width: 100px;
+  height: 100px;
+  background-size: 100% 100%;
 }
 </style>
