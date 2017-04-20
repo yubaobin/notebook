@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <input v-model="name" />
-    <button @click="changeName">修改名字</button>
+    <button @click="changeName">修改名字dev</button>
     <p>{{ storeName }}</p>
   </div>
 </template>
