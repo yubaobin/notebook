@@ -5,6 +5,6 @@
 /**
  * 改变appName状态
  */
-export const changeType = ({commit}, options) => {
+export const changeType = ({ commit }, options) => {
   commit('changeType', options);
 };
