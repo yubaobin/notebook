@@ -2,6 +2,6 @@
  * 公共的mutations
  */
 
-export const changeWelcome = (state, options) => {
-  state.showWelcome = options.welcome
-}
+export const changeType = (state, { type }) => {
+  state.type = type;
+};

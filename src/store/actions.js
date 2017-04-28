@@ -3,8 +3,8 @@
  */
 
 /**
- * 改变welcome状态
+ * 改变appName状态
  */
-export const changeWelcome = ({commit}, options) => {
-  commit('changeWelcome', options)
-}
+export const changeType = ({commit}, options) => {
+  commit('changeType', options);
+};

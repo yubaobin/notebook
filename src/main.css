@@ -3,14 +3,18 @@
   padding: 0;
 }
 ul, li {
-	list-style-type: none;
+	/* list-style-type: none; */
+}
+a {
+  text-decoration: none;
 }
 
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+input,button,select,textarea,button,a,a:visited,a:focus,a:active{
+  outline:none;
+}
+
+button {
+  background-color: #FFF;
+  border: none;
+  padding: 8px 15px;
 }

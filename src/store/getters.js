@@ -2,6 +2,5 @@
  * 公共getters
  */
 
-export const getWelcome = state => {
-  return state.showWelcome
-}
+export const getType = state => state.type;
+
