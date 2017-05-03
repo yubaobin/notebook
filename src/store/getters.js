@@ -4,3 +4,7 @@
 
 export const getType = state => state.type;
 
+export const bottomHeight = state => state.bottomHeight;
+
+export const topHeight = state => state.topHeight;
+

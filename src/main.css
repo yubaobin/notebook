@@ -13,8 +13,13 @@ input,button,select,textarea,button,a,a:visited,a:focus,a:active{
   outline:none;
 }
 
+html,body {
+  height: 100%
+}
+
 button {
   background-color: #FFF;
   border: none;
   padding: 8px 15px;
 }
+

@@ -14,6 +14,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     type: 'new',
+    bottomHeight: 0,
+    topHeight: 0,
   },
   mutations,
   getters,

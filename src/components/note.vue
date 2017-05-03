@@ -1,6 +1,6 @@
 <template>
   <div id="note">
-    <header>
+    <header ref="header">
       <div class="img-container">
         <img src="~@/assets/img.jpg"/>
       </div>
@@ -17,7 +17,9 @@
         <icon name="ellipsis-h"></icon>
       </div>
     </header>
-	  <router-view></router-view>
+    <transition :name="transitionName" >
+	    <router-view></router-view>
+    </transition>
   </div>
 </template>
 <script>
@@ -26,6 +28,15 @@ import 'vue-awesome/icons/ellipsis-h';
 
 export default {
   name: 'note-view',
+  data() {
+    return {
+      transitionName: '',
+    };
+  },
+  mounted() {
+    const topHeight = this.$refs.header.offsetHeight;
+    this.$store.dispatch('changeTopHeight', { topHeight });
+  },
   methods: {
     changeView(type) {
       this.$store.dispatch('changeType', { type });
@@ -33,11 +44,18 @@ export default {
   },
   computed: {
   },
+  watch: {
+    $route(to) {
+      const toView = to.name;
+      this.transitionName = toView === 'all' ? 'slide-left' : 'slide-right';
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 $ppr: 750px/16/1rem;
 #note {
+  height: 100%;
   header {
   	color: #FFF;
   	background-color: #20A0FF;
@@ -66,7 +84,7 @@ $ppr: 750px/16/1rem;
   	  .is-active span{
         color: rgba(255,255,255,1);
         font-size: 38px/$ppr;
-  	  	border-bottom: 1px solid #FFF;
+  	  	border-bottom: 2px solid #FFF;
   	  }
   	}
     .operator {
@@ -103,5 +121,21 @@ html[data-dpr='3'] {
       }
     }
   }
+}
+.slide-right-enter {
+  -webkit-transform: transition(-100%, 0);
+  transform: translate(-100%, 0);
+}
+
+.slide-right-enter-active {
+  transition: all .5s;
+}
+
+.slide-left-enter {
+  -webkit-transform: translate(100%, 0);
+  transform: translate(100%, 0);
+}
+.slide-left-enter-active {
+  transition: all .5s;
 }
 </style>

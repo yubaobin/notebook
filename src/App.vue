@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <router-view></router-view>
-    <bottom-nav active="1">
+    <router-view class="view"></router-view>
+    <bottom-nav active="1" ref="bottom-nav">
       <item-nav @click="note" index="1"><icon name="file-text"></icon><p>笔记</p></item-nav>
       <item-nav @click="person" index="2"><icon name="user-o"></icon><p>我的</p></item-nav>
     </bottom-nav>
@@ -17,6 +17,10 @@ export default {
   data() {
     return {
     };
+  },
+  mounted() {
+    const bottomHeight = this.$refs['bottom-nav'].$el.offsetHeight;
+    this.$store.dispatch('changeBottomHeight', { bottomHeight });
   },
   methods: {
     note() {
@@ -37,8 +41,11 @@ export default {
 <style scoped lang="scss">
 $ppr: 750px/16/1rem;
 #app {
+  height: 100%;
   .bottom-nav {
+    padding: 10px 0;
     border-top: 1px solid #CDCDCD;
+    background-color: #FFF;
     .item-nav {
       display: flex;
       flex-direction: column;
@@ -53,4 +60,5 @@ $ppr: 750px/16/1rem;
     }
   }
 }
+
 </style>

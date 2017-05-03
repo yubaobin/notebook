@@ -1,5 +1,5 @@
 <template>
-  <div>
-  	全部
+  <div id="all">
+  	
   </div>
 </template>
