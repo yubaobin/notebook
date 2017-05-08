@@ -13,13 +13,17 @@
       	</router-link>
       </div>
       <div class="operator">
-        <icon name="refresh"></icon>
-        <icon name="ellipsis-h"></icon>
+        <span @click.stop="refresh"><icon name="refresh" :class="{ rotate: rotate }"></icon></span>
+        <span class="refash" @click.stop="openMenu"><icon name="ellipsis-h"></icon></span>
       </div>
     </header>
     <transition :name="transitionName" >
 	    <router-view></router-view>
     </transition>
+    <drop-menu ref="dropMenu" target=".refash">
+      <menu-item >1. 编辑</menu-item>
+      <menu-item >2. 只显示标题</menu-item>
+    </drop-menu>
   </div>
 </template>
 <script>
@@ -31,6 +35,7 @@ export default {
   data() {
     return {
       transitionName: '',
+      rotate: false,
     };
   },
   mounted() {
@@ -40,6 +45,23 @@ export default {
   methods: {
     changeView(type) {
       this.$store.dispatch('changeType', { type });
+    },
+    refresh() {
+      this.rotate = true;
+      this.loadNote();
+    },
+    loadNote() {
+      window.setTimeout(() => {
+        this.rotate = false;
+        this.$toast('笔记同步成功!', {
+          horizontalPosition: 'center',
+          className: 'info',
+          duration: 1500,
+        });
+      }, 2000);
+    },
+    openMenu() {
+      this.$refs.dropMenu.open();
     },
   },
   computed: {
@@ -89,9 +111,15 @@ $ppr: 750px/16/1rem;
   	}
     .operator {
       display: flex;
+      .rotate {
+        animation: rotateLeft 1s infinite linear;
+        -webkit-animation: rotateLeft 1s infinite linear; 
+      }
       .fa-icon {
         width: auto;
         height: 40px/$ppr;
+      }
+      span {
         margin-right: 30px/$ppr;
         &:last-child {
           margin-right: 0;

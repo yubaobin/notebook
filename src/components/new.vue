@@ -1,5 +1,5 @@
 <template>
-  <div id="new" :style="{ height: (docHeight-bottomHeight-topHeight-searchHeight)+'px' }">
+  <div id="new" :style="{ height: height }">
     <div class="search" ref="search">
   	  <div class="search-btn" @click="search"><icon name="search"></icon>搜索</div>
   	</div>
@@ -42,6 +42,9 @@ export default {
       'bottomHeight',
       'topHeight',
     ]),
+    height() {
+      return `${this.docHeight - this.bottomHeight - this.topHeight - this.searchHeight}px`;
+    },
   },
 };
 </script>
