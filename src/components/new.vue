@@ -3,8 +3,8 @@
     <div class="search" ref="search">
   	  <div class="search-btn" @click="search"><icon name="search"></icon>搜索</div>
   	</div>
-  	<scroller class="new-list" ref="scroller">
-  	  <div class="list-item" v-for="item in 4">
+  	<scroller class="new-list" ref="scroller" :on-refresh="refresh" :on-infinite="infinite">
+  	  <div class="list-item" v-for="item in items">
   	  	<div class="title"><icon name="pencil"></icon><span>渲染性能</span></div>
   	  	<div class="comment">网页生成过程: 1.html代码转化成DOM。2.css代码转化成cssom</div>
   	  	<div class="img"></div>
@@ -25,6 +25,7 @@ export default {
     return {
       docHeight: 0,
       searchHeight: 0,
+      items: [1, 2, 3, 4],
     };
   },
   mounted() {
@@ -35,6 +36,21 @@ export default {
   methods: {
     search() {
       console.log('跳转到搜索页面');
+    },
+    refresh(done) {
+      console.log('下拉刷新');
+      window.setTimeout(() => {
+        done();
+        console.log('下拉刷新完成');
+      }, 2000);
+    },
+    infinite(done) {
+      console.log('上拉加载');
+      window.setTimeout(() => {
+        this.items.push(5);
+        console.log(this.items);
+        done();
+      }, 2000);
     },
   },
   computed: {
