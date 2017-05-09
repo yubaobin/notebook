@@ -17,18 +17,23 @@
         <span class="refash" @click.stop="openMenu"><icon name="ellipsis-h"></icon></span>
       </div>
     </header>
-    <transition :name="transitionName" >
+    <transition name="fade" mode="out-in">
 	    <router-view></router-view>
     </transition>
     <drop-menu ref="dropMenu" target=".refash">
-      <menu-item >1. 编辑</menu-item>
-      <menu-item >2. 只显示标题</menu-item>
+      <menu-item index="1"><icon name="edit"></icon>编辑</menu-item>
+      <menu-item v-if="showTitle" index="2" @click="changeShowTitle"><icon name="bars"></icon>只显示标题</menu-item>
+      <menu-item v-else index="2" @click="changeShowTitle"><icon name="list"></icon>显示摘要</menu-item>
     </drop-menu>
   </div>
 </template>
 <script>
 import 'vue-awesome/icons/refresh';
+import 'vue-awesome/icons/edit';
 import 'vue-awesome/icons/ellipsis-h';
+import 'vue-awesome/icons/bars';
+import 'vue-awesome/icons/list';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'note-view',
@@ -63,14 +68,14 @@ export default {
     openMenu() {
       this.$refs.dropMenu.open();
     },
+    changeShowTitle() {
+      this.$store.dispatch('changeShowTitle', { showTitle: !this.showTitle });
+    },
   },
   computed: {
-  },
-  watch: {
-    $route(to) {
-      const toView = to.name;
-      this.transitionName = toView === 'all' ? 'slide-left' : 'slide-right';
-    },
+    ...mapGetters([
+      'showTitle',
+    ]),
   },
 };
 </script>
@@ -127,6 +132,17 @@ $ppr: 750px/16/1rem;
       }
     }
   }
+  .drop-menu {
+    .menu-item {
+      display: flex;
+      align-items: center;
+      .fa-icon {
+        width: auto;
+        height: 35px/$ppr;
+        margin-right: 15px;
+      }
+    }
+  }
 }
 html[data-dpr='2'] {
   #note {
@@ -149,21 +165,5 @@ html[data-dpr='3'] {
       }
     }
   }
-}
-.slide-right-enter {
-  -webkit-transform: transition(-100%, 0);
-  transform: translate(-100%, 0);
-}
-
-.slide-right-enter-active {
-  transition: all .5s;
-}
-
-.slide-left-enter {
-  -webkit-transform: translate(100%, 0);
-  transform: translate(100%, 0);
-}
-.slide-left-enter-active {
-  transition: all .5s;
 }
 </style>

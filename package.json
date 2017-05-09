@@ -16,7 +16,7 @@
     "vue-awesome": "^2.2.5",
     "vue-axios": "^2.0.1",
     "vue-bottom-nav": "^1.1.2",
-    "vue-dropmenu": "^1.0.9",
+    "vue-dropmenu": "^1.1.0",
     "vue-easy-toast": "^1.0.1",
     "vue-loader": "^11.1.4",
     "vue-router": "^2.3.0",

@@ -118,7 +118,7 @@ $ppr: 750px/16/1rem;
   	  }
   	  .info {
   	  	color: #CDCDCD; 
-        font-size: 22px/$ppr;
+        font-size: 16px/$ppr;
         margin: 30px/$ppr 0;
         span:nth-of-type(1) {
           margin-right: 30px/$ppr;

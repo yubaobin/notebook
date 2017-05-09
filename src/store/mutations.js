@@ -13,3 +13,7 @@ export const changeBottomHeight = (state, { bottomHeight }) => {
 export const changeTopHeight = (state, { topHeight }) => {
   state.topHeight = topHeight;
 };
+
+export const changeShowTitle = (state, { showTitle }) => {
+  state.showTitle = showTitle;
+};

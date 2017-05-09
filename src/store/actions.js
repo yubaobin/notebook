@@ -16,3 +16,7 @@ export const changeBottomHeight = ({ commit }, options) => {
 export const changeTopHeight = ({ commit }, options) => {
   commit('changeTopHeight', options);
 };
+
+export const changeShowTitle = ({ commit }, options) => {
+  commit('changeShowTitle', options);
+};

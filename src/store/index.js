@@ -16,6 +16,7 @@ export default new Vuex.Store({
     type: 'new',
     bottomHeight: 0,
     topHeight: 0,
+    showTitle: false,
   },
   mutations,
   getters,
