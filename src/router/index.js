@@ -21,6 +21,7 @@ const router = new Router({
       children: [
         { path: 'new', name: 'new', component: New },
         { path: 'all', name: 'all', component: All },
+        { path: 'detail/:noteId', name: 'detail', component: All },
       ],
     }, {
       path: '/person',

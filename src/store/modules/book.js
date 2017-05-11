@@ -2,28 +2,30 @@
  * hello 模块
  */
 const getters = {
-  bookList: (state) => state.books,
+  getNoteId: (state) => state.noteId,
+  getTitle: (state) => state.title,
 };
 
 const actions = {
-  addBook({ commit }, option) {
-    commit('addBook', option);
+  changeNoteId({ commit }, option) {
+    commit('changeNoteId', option);
   },
-  deleteBook({ commit }, option) {
-    commit('deleteBook', option);
+  changeTitle({ commit }, option) {
+    commit('changeTitle', option);
   },
 };
 
 const mutations = {
-  addBook(state, { book }) {
-    state.books.push(book);
+  changeNoteId(state, { noteId }) {
+    state.noteId = noteId;
   },
-  deleteBook(state, { index }) {
-    state.books.splice(index, 1);
+  changeTitle(state, { title }) {
+    state.title = title;
   },
 };
 const state = {
-  books: [],
+  noteId: -1,
+  title: '',
 };
 export default {
   state,

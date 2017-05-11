@@ -17,3 +17,7 @@ export const changeTopHeight = (state, { topHeight }) => {
 export const changeShowTitle = (state, { showTitle }) => {
   state.showTitle = showTitle;
 };
+
+export const changeShowBottom = (state, { showBottom }) => {
+  state.showBottom = showBottom;
+};

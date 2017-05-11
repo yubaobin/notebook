@@ -22,6 +22,25 @@ button {
   background-color: transparent;
   border: none;
 }
+header {
+  height: 40px;
+  color: #FFF;
+  background-color: #20A0FF;
+  padding: 5px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+html[data-dpr='2'] header{ 
+  height: 80px;
+  padding: 10px 40px;
+}
+
+html[data-dpr='3'] header{ 
+  height: 120px;
+  padding: 15px 60px;
+}
 
 /* Toast css */
 .et-wrapper.info {
@@ -36,6 +55,10 @@ button {
   position: absolute;
 }
 
+.x_panel {
+  position: relative;
+  padding: 0 12px;
+}
 html[data-dpr='2'] .et-wrapper.info {
   top: 120px;
   padding: 12px 60px;

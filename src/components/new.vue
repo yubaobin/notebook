@@ -1,10 +1,10 @@
 <template>
-  <div id="new" :style="{ height: height }">
+  <div id="new" class="x_panel" :style="{ height: height }">
     <div class="search" ref="search">
   	  <div class="search-btn" @click="search"><icon name="search"></icon>搜索</div>
   	</div>
   	<scroller class="new-list" ref="scroller" :on-refresh="refresh" :on-infinite="infinite">
-  	  <div class="list-item" v-for="note in noteList">
+  	  <div class="list-item" v-for="note in noteList" @click="gotoDetail(note.id)">
         <div class="title"><icon name="folder"></icon><span>{{ note.title }}</span></div>
         <template v-if="showTitle">
         <div class="comment">{{ note.title }}</div>
@@ -76,6 +76,9 @@ export default {
         });
       });
     },
+    gotoDetail(id) {
+      this.$router.push(`/note/detail/${id}`);
+    },
   },
   computed: {
     ...mapGetters([
@@ -92,8 +95,6 @@ export default {
 <style scoped lang="scss">
 $ppr: 750px/16/1rem;
 #new {
-  position: relative;
-  padding: 0 12px;
   .search {
   	padding: 7px 0;
   	height: 25px;

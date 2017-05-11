@@ -1,12 +1,14 @@
 <template>
-  <div id="all" :style="{ height: height }">
+  <div id="all" class="x_panel" :style="{ height: height }">
     <div class="search" ref="search">
   	  <span class="operate-icon" @click="openNew"><icon name="plus-square-o"></icon></span>
   	  <div class="search-btn" @click="search"><icon name="search"></icon>搜索</div>
   	  <span class="operate-icon sort" @click.stop="openMenu"><icon name="list"></icon></span>
   	</div>
-  	<scroller class="new-list" ref="scroller" :on-refresh="refresh" :on-infinite="infinite" snappingHeight="200">
-  	  <div class="list-item" v-for="note in noteList">
+    <div v-if="noteId">内容</div>
+  	<scroller class="new-list" snappingHeight="200" ref="scroller" v-else
+              :on-refresh="refresh" :on-infinite="infinite" >
+  	  <div class="list-item" v-for="note in noteList" @click="gotoDetail(note.id)">
   	  	<div class="title"><icon name="folder"></icon><span>{{ note.title }}</span></div>
   	  	<template v-if="showTitle">
 	  	  <div class="comment" @click="handle">{{ note.title }}</div>
@@ -57,10 +59,16 @@ export default {
       noteList: [],
       modalShow: false,
       newFolderName: '',
+      noteId: this.$route.params.noteId,
     };
   },
   created() {
     this.listNote({ pageNumber: 0, pageSize: 10 });
+    if (this.noteId) {
+      this.$store.dispatch('changeNoteId', { noteId: this.noteId });
+      const title = this.loadNote();
+      this.$store.dispatch('changeTitle', { title });
+    }
   },
   mounted() {
     this.docHeight = document.documentElement.clientHeight;
@@ -70,6 +78,9 @@ export default {
   methods: {
     search() {
       console.log('跳转到搜索页面');
+    },
+    loadNote() {
+      return '标题';
     },
     refresh(done) {
       window.setTimeout(() => {
@@ -120,6 +131,9 @@ export default {
     hideNew() {
       this.modalShow = false;
     },
+    gotoDetail(id) {
+      this.$router.push(`/note/detail/${id}`);
+    },
   },
   computed: {
     ...mapGetters([
@@ -143,8 +157,6 @@ $ppr: 750px/16/1rem;
   z-index: 100;
 }
 #all {
-  position: relative;
-  padding: 0 12px;
   .search {
   	padding: 7px 0;
   	height: 25px;
@@ -311,22 +323,22 @@ html[data-dpr='2'] {
 html[data-dpr='3'] {
   #all {
   	padding: 0 36px;
-	.search {
-	  padding: 21px 0;
-	  height: 75px;
-	  .search-btn {
-	    font-size: 36px;
-	    .fa-icon {
-	      height: 36px;
+	  .search {
+	    padding: 21px 0;
+	    height: 75px;
+	    .search-btn {
+	      font-size: 36px;
+	      .fa-icon {
+	        height: 36px;
+	      }
 	    }
-	  }
-	  .operate-icon {
-	  	.fa-icon {
+	    .operate-icon {
+	  	  .fa-icon {
           width: auto;
           height: 40px;
         }
       }
-	}
+	  }
   }
 }
 </style>

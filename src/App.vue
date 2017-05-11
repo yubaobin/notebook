@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <router-view class="view"></router-view>
-    <bottom-nav active="1" ref="bottom-nav">
+    <transition name="fade" mode="out-in">
+      <router-view class="view"></router-view>
+    </transition>
+    <bottom-nav active="1" ref="bottom-nav" v-show="showBottom">
       <item-nav @click="note" index="1"><icon name="file-text"></icon><p>笔记</p></item-nav>
       <item-nav @click="person" index="2"><icon name="user-o"></icon><p>我的</p></item-nav>
     </bottom-nav>
@@ -33,6 +35,7 @@ export default {
   computed: {
     ...mapGetters([
       'getType',
+      'showBottom',
     ]),
   },
 };

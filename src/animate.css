@@ -22,3 +22,8 @@
   }
 }
 
+.rotate {
+  animation: rotateLeft 1s infinite linear;
+  -webkit-animation: rotateLeft 1s infinite linear; 
+}
+

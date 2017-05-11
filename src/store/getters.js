@@ -10,3 +10,5 @@ export const topHeight = state => state.topHeight;
 
 export const showTitle = state => state.showTitle;
 
+export const showBottom = state => state.showBottom;
+
