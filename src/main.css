@@ -19,9 +19,8 @@ html,body {
 }
 
 button {
-  background-color: #FFF;
+  background-color: transparent;
   border: none;
-  padding: 8px 15px;
 }
 
 /* Toast css */
@@ -33,6 +32,9 @@ button {
   background-color: rgba(32, 160, 255, .6);
 }
 
+._v-content {
+  position: absolute;
+}
 
 html[data-dpr='2'] .et-wrapper.info {
   top: 120px;

@@ -4,14 +4,16 @@
   	  <div class="search-btn" @click="search"><icon name="search"></icon>搜索</div>
   	</div>
   	<scroller class="new-list" ref="scroller" :on-refresh="refresh" :on-infinite="infinite">
-  	  <div class="list-item" v-for="item in items">
-  	  	<div class="title"><icon name="pencil"></icon><span>渲染性能</span></div>
-  	  	<div class="comment">网页生成过程: 1.html代码转化成DOM。2.css代码转化成cssom</div>
-  	  	<div class="img"></div>
-  	  	<div class="info">
-  	  	  <span>17-04-20</span><span>51.25K</span>
-  	  	</div>
-  	  </div>
+  	  <div class="list-item" v-for="note in noteList">
+        <div class="title"><icon name="folder"></icon><span>{{ note.title }}</span></div>
+        <template v-if="showTitle">
+        <div class="comment">{{ note.title }}</div>
+        <div class="img" :style="{backgroundImage: 'url('+note.img+')'}"></div>
+        </template>
+        <div class="info">
+          <span>{{ note.time }}</span><span>{{ note.size }}</span>
+        </div>
+      </div>
   	</scroller>
   </div>
 </template>
@@ -25,7 +27,7 @@ export default {
     return {
       docHeight: 0,
       searchHeight: 0,
-      items: [1, 2, 3, 4],
+      noteList: [],
     };
   },
   mounted() {
@@ -38,25 +40,48 @@ export default {
       console.log('跳转到搜索页面');
     },
     refresh(done) {
-      console.log('下拉刷新');
       window.setTimeout(() => {
+        this.$toast('笔记同步成功!', {
+          horizontalPosition: 'center',
+          className: 'info',
+          duration: 1500,
+        });
         done();
-        console.log('下拉刷新完成');
       }, 2000);
     },
     infinite(done) {
-      console.log('上拉加载');
-      window.setTimeout(() => {
-        this.items.push(5);
-        console.log(this.items);
-        done();
-      }, 2000);
+      this.listNote({ pageNumber: 0, pageSize: 10 }).then((response) => {
+        const data = this.Mock.mock(response.data);
+        if (data.done) {
+          done(true);
+        } else {
+          this.noteList = this.noteList.concat(data.list);
+          done();
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+    },
+    listNote(params) {
+      return new Promise((resolve, reject) => {
+        this.axios.get('/listNote', {
+          params: {
+            pageSize: params.pageSize,
+            pageNumber: params.pageNumber,
+          },
+        }).then((response) => {
+          resolve(response);
+        }).catch((error) => {
+          reject(error);
+        });
+      });
     },
   },
   computed: {
     ...mapGetters([
       'bottomHeight',
       'topHeight',
+      'showTitle',
     ]),
     height() {
       return `${this.docHeight - this.bottomHeight - this.topHeight - this.searchHeight}px`;

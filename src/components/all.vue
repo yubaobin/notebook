@@ -1,19 +1,19 @@
 <template>
   <div id="all" :style="{ height: height }">
     <div class="search" ref="search">
-  	  <span class="operate-icon"><icon name="plus-square-o"></icon></span>
+  	  <span class="operate-icon" @click="openNew"><icon name="plus-square-o"></icon></span>
   	  <div class="search-btn" @click="search"><icon name="search"></icon>搜索</div>
   	  <span class="operate-icon sort" @click.stop="openMenu"><icon name="list"></icon></span>
   	</div>
-  	<scroller class="new-list" ref="scroller" :on-refresh="refresh" :on-infinite="infinite">
-  	  <div class="list-item" v-for="item in items">
-  	  	<div class="title"><icon name="folder"></icon><span>渲染性能</span></div>
+  	<scroller class="new-list" ref="scroller" :on-refresh="refresh" :on-infinite="infinite" snappingHeight="200">
+  	  <div class="list-item" v-for="note in noteList">
+  	  	<div class="title"><icon name="folder"></icon><span>{{ note.title }}</span></div>
   	  	<template v-if="showTitle">
-	  	  <div class="comment">网页生成过程: 1.html代码转化成DOM。2.css代码转化成cssom</div>
-	  	  <div class="img"></div>
+	  	  <div class="comment" @click="handle">{{ note.title }}</div>
+	  	  <div class="img" :style="{backgroundImage: 'url('+note.img+')'}"></div>
   	  	</template>
   	  	<div class="info">
-  	  	  <span>17-04-20</span><span>51.25K</span>
+  	  	  <span>{{ note.time }}</span><span>{{ note.size }}</span>
   	  	</div>
   	  </div>
   	</scroller>
@@ -22,6 +22,21 @@
       <menu-item index="2">按名称排序<icon name="check"></icon></menu-item>
       <menu-item index="3">按创建时间排序<icon name="check"></icon></menu-item>
     </drop-menu>
+    <transition name="fade">
+      <div class="modal cover" v-show="modalShow">
+        <div class="modal-mask"></div>
+        <div class="modal-dialog">
+      	  <div class="modal-head">新建文件夹</div>
+      	  <div class="modal-body">
+      	    <input type="text" v-model="newFolderName" ref="newFolderName"/>
+      	  </div>
+      	  <div class="modal-footer">
+      	    <div class="modal-btn"><button @click="hideNew">取消</button></div>
+      	    <div class="modal-btn"><button>确认</button></div>
+      	  </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 <script>
@@ -39,8 +54,13 @@ export default {
     return {
       docHeight: 0,
       searchHeight: 0,
-      items: [1, 2, 3, 4],
+      noteList: [],
+      modalShow: false,
+      newFolderName: '',
     };
+  },
+  created() {
+    this.listNote({ pageNumber: 0, pageSize: 10 });
   },
   mounted() {
     this.docHeight = document.documentElement.clientHeight;
@@ -52,22 +72,53 @@ export default {
       console.log('跳转到搜索页面');
     },
     refresh(done) {
-      console.log('下拉刷新');
       window.setTimeout(() => {
+        this.$toast('笔记同步成功!', {
+          horizontalPosition: 'center',
+          className: 'info',
+          duration: 1500,
+        });
         done();
-        console.log('下拉刷新完成');
       }, 2000);
     },
     infinite(done) {
-      console.log('上拉加载');
-      window.setTimeout(() => {
-        this.items.push(5);
-        console.log(this.items);
-        done();
-      }, 2000);
+      this.listNote({ pageNumber: 0, pageSize: 10 }).then((response) => {
+        const data = this.Mock.mock(response.data);
+        if (data.done) {
+          done(true);
+        } else {
+          this.noteList = this.noteList.concat(data.list);
+          done();
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+    },
+    listNote(params) {
+      return new Promise((resolve, reject) => {
+        this.axios.get('/listNote', {
+          params: {
+            pageSize: params.pageSize,
+            pageNumber: params.pageNumber,
+          },
+        }).then((response) => {
+          resolve(response);
+        }).catch((error) => {
+          reject(error);
+        });
+      });
     },
     openMenu() {
       this.$refs.dropMenu.open();
+    },
+    openNew() {
+      this.modalShow = true;
+      setTimeout(() => {
+        this.$refs.newFolderName.focus();
+      }, 100);
+    },
+    hideNew() {
+      this.modalShow = false;
     },
   },
   computed: {
@@ -84,6 +135,13 @@ export default {
 </script>
 <style scoped lang="scss">
 $ppr: 750px/16/1rem;
+@mixin cover() {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
 #all {
   position: relative;
   padding: 0 12px;
@@ -141,7 +199,6 @@ $ppr: 750px/16/1rem;
   	  .img {
   	  	width: 200px/$ppr;
   	  	height: 150px/$ppr;
-  	  	background-image: url(~@/assets/img.jpg);
   	  	background-repeat: no-repeat;
         background-position: 50% 50%;
   	  }
@@ -155,10 +212,11 @@ $ppr: 750px/16/1rem;
   	  }
     }
   }
-  .drop-menu {
+  .sortMenu {
     .menu-item {
       display: flex;
       align-items: center;
+      padding: 20px/$ppr;
       .fa-icon {
         width: auto;
         height: 35px/$ppr;
@@ -171,6 +229,62 @@ $ppr: 750px/16/1rem;
       	}
       }
     }
+  }
+  .cover {
+  	position: fixed;
+  	@include cover;
+  	.modal-mask {
+      position: absolute;
+      background: rgba(0,0,0,.3);
+      @include cover;
+  	}
+  	.modal-dialog {
+      position: absolute;
+      top: 35%;
+      left: 0;
+      right: 0;
+      margin: auto;
+      z-index: 101;
+      background: #fff;
+      border-radius: 30px/$ppr;
+      width: 600px/$ppr;
+      box-shadow: 0 1px 3px rgba(0,0,0,.2);
+      font-size: 30px/$ppr;
+      text-align: center;
+      .modal-head {
+        padding: 30px/$ppr 0px;
+      }
+      .modal-body {
+      	margin-bottom: 20px/$ppr;
+        input{
+      	  font-size: 30px/$ppr;
+      	  width: 80%;
+      	  padding: 10px/$ppr;
+      	  border: 1px solid #E2E2E2;
+        }
+      }
+      .modal-footer { 
+      	display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top: 1px solid #E2E2E2;
+      	.modal-btn {
+      	  flex: 1;
+      	  border-right: 1px solid #E2E2E2;
+      	  padding: 20px/$ppr 0px;
+      	  &:active {
+  	        background-color: #E2E2E2;
+  	      }
+      	  &:last-child {
+            border-right: none;
+      	  }
+      	  button {
+      	  	color: #20A0FF;
+      	    font-size: 30px/$ppr;
+      	  }
+        }
+      }
+  	}
   }
 }
 html[data-dpr='2'] {

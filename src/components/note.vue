@@ -141,6 +141,9 @@ $ppr: 750px/16/1rem;
         height: 35px/$ppr;
         margin-right: 15px;
       }
+      &.active {
+        color: #FFF;   
+      }
     }
   }
 }
