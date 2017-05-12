@@ -30,6 +30,8 @@ export default {
       noteList: [],
     };
   },
+  created() {
+  },
   mounted() {
     this.docHeight = document.documentElement.clientHeight;
     this.searchHeight = this.$refs.search.offsetHeight;
@@ -50,7 +52,7 @@ export default {
       }, 2000);
     },
     infinite(done) {
-      this.listNote({ pageNumber: 0, pageSize: 10 }).then((response) => {
+      this.listNote({ pageNumber: 1, pageSize: 10 }).then((response) => {
         const data = this.Mock.mock(response.data);
         if (data.done) {
           done(true);

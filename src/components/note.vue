@@ -1,12 +1,13 @@
 <template>
   <div id="note">
     <header ref="header">
-      <div class="img-container" v-if="getNoteId === -1">
+      <span v-if="getNoteId" class="back" @click="back"><icon name="angle-left"></icon></span>
+      <div class="img-container" v-else>
         <img src="~@/assets/img.jpg"/>
       </div>
-      <span v-else class="back"><icon name="angle-left"></icon></span>
       <div class="center-container">
-        <template v-if="getNoteId === -1">
+        <span v-if="getNoteId" class="title">{{ getTitle }}</span>
+        <template v-else>
       	  <router-link active-class="is-active" to="/note/new" >
       	    <span @click="changeView('new')">最新</span>
       	  </router-link>
@@ -14,7 +15,6 @@
       	    <span @click="changeView('all')">全部</span>
       	  </router-link>
         </template>
-        <span v-else>{{ getTitle }}</span>
       </div>
       <div class="operator">
         <span @click.stop="refresh"><icon name="refresh" :class="{ rotate: rotate }"></icon></span>
@@ -76,6 +76,9 @@ export default {
     changeShowTitle() {
       this.$store.dispatch('changeShowTitle', { showTitle: !this.showTitle });
     },
+    back() {
+      this.$router.go(-1);
+    },
   },
   computed: {
     ...mapGetters([
@@ -107,6 +110,9 @@ $ppr: 750px/16/1rem;
 	}
 	.center-container {
 	  font-size: 35px/$ppr;
+    .title {
+      margin-left: 40px/$ppr;
+    }
 	  a {
       margin-right: 20px/$ppr; 
 	  	color: rgba(255,255,255,.8);

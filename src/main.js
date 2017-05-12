@@ -44,3 +44,13 @@ new Vue({
   template: '<App/>',
   components: { App },
 });
+
+router.beforeEach((to, from, next) => {
+  if (from.name === 'detail' && to.name !== 'detail') {
+    store.dispatch('changeNoteId', { noteId: '' });
+  } else if (to.name === 'detail') {
+    const noteId = to.params.noteId;
+    store.dispatch('changeNoteId', { noteId });
+  }
+  next();
+});

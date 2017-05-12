@@ -5,13 +5,13 @@
   	  <div class="search-btn" @click="search"><icon name="search"></icon>搜索</div>
   	  <span class="operate-icon sort" @click.stop="openMenu"><icon name="list"></icon></span>
   	</div>
-    <div v-if="noteId">内容</div>
+    <div v-if="getNoteId">内容</div>
   	<scroller class="new-list" snappingHeight="200" ref="scroller" v-else
               :on-refresh="refresh" :on-infinite="infinite" >
   	  <div class="list-item" v-for="note in noteList" @click="gotoDetail(note.id)">
   	  	<div class="title"><icon name="folder"></icon><span>{{ note.title }}</span></div>
   	  	<template v-if="showTitle">
-	  	  <div class="comment" @click="handle">{{ note.title }}</div>
+	  	  <div class="comment">{{ note.title }}</div>
 	  	  <div class="img" :style="{backgroundImage: 'url('+note.img+')'}"></div>
   	  	</template>
   	  	<div class="info">
@@ -59,28 +59,33 @@ export default {
       noteList: [],
       modalShow: false,
       newFolderName: '',
-      noteId: this.$route.params.noteId,
+      content: '',
     };
   },
   created() {
-    this.listNote({ pageNumber: 0, pageSize: 10 });
-    if (this.noteId) {
-      this.$store.dispatch('changeNoteId', { noteId: this.noteId });
-      const title = this.loadNote();
-      this.$store.dispatch('changeTitle', { title });
-    }
   },
   mounted() {
     this.docHeight = document.documentElement.clientHeight;
     this.searchHeight = this.$refs.search.offsetHeight;
-    this.$refs.scroller.resize();
+    if (this.$refs.scroller) this.$refs.scroller.resize();
+  },
+  watch: {
+    getNoteId(newValue) {
+      if (newValue) {
+        const data = this.loadNote();
+        this.$store.dispatch('changeTitle', { title: data.title });
+        this.content = data.content;
+      } else {
+        this.listNote({ pageNumber: 0, pageSize: 10 });
+      }
+    },
   },
   methods: {
     search() {
       console.log('跳转到搜索页面');
     },
     loadNote() {
-      return '标题';
+      return { title: '这是标题', content: '内容' };
     },
     refresh(done) {
       window.setTimeout(() => {
@@ -140,6 +145,8 @@ export default {
       'bottomHeight',
       'topHeight',
       'showTitle',
+      'getNoteId',
+      'getTitle',
     ]),
     height() {
       return `${this.docHeight - this.bottomHeight - this.topHeight - this.searchHeight}px`;

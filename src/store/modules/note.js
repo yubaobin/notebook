@@ -24,7 +24,7 @@ const mutations = {
   },
 };
 const state = {
-  noteId: -1,
+  noteId: 0,
   title: '',
 };
 export default {
